@@ -39,6 +39,7 @@ exports.signup = async (req, res) => {
 };
 
 exports.signin = async (req, res) => {
+  console.log('------------------signin')
   try {
     const user = await User.findOne({
       username: req.body.username,

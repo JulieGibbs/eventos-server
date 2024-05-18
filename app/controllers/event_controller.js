@@ -11,6 +11,7 @@ exports.eventAdd = async (req, res) => {
             address: req.body.address,
             description: req.body.description,
             date: currentTime,
+            price:req.body.price,
             manager: req.userId
         });
 
