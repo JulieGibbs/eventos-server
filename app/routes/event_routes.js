@@ -11,8 +11,9 @@ module.exports = function(app) {
   });
 
   app.get("/api/event/all", controller.eventAll);
-
+  app.get("/api/event/myall", controller.eventMyAll);
   app.post("/api/event/add", [authJwt.verifyToken], controller.eventAdd);
   app.patch("/api/event/update/:id", [authJwt.verifyToken], controller.eventUpdate);
   app.delete("/api/event/update/:id", [authJwt.verifyToken], controller.eventDelete);
+  app.get("/api/event/search/:keyword",  controller.eventSearch);
 };

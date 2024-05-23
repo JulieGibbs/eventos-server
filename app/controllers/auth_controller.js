@@ -7,9 +7,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 exports.signup = async (req, res) => {
+  console.log('signup', req.body)
   try {
     const user = new User({
-      username: req.body.username,
+      fullname: req.body.fullname,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 8),
     });
@@ -40,9 +41,10 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   console.log('------------------signin')
+  console.log('req-auth', req.body)
   try {
     const user = await User.findOne({
-      username: req.body.username,
+      email: req.body.email,
     }).populate("roles", "-__v");
 
     if (!user) {
@@ -71,12 +73,14 @@ exports.signin = async (req, res) => {
     const authorities = user.roles.map(role => "ROLE_" + role.name.toUpperCase());
 
     req.session.token = token;
+    console.log('token------', token)
 
     res.status(200).send({
       id: user._id,
-      username: user.username,
+      fullname: user.fullname,
       email: user.email,
       roles: authorities,
+      token: token
     });
   } catch (err) {
     res.status(500).send({ message: err });

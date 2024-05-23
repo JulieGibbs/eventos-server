@@ -7,7 +7,7 @@ const Event = mongoose.model(
         address: String,
         description: String,
         date:Date,
-        price:Number,
+        price:String,
         manager:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"

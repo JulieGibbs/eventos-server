@@ -3,6 +3,7 @@ const Event = db.event;
 
 exports.eventAdd = async (req, res) => {
     console.log('------------------add')
+    console.log('req.body', req.body)
 
     try {
         const currentTime = new Date()
@@ -10,7 +11,7 @@ exports.eventAdd = async (req, res) => {
             title: req.body.title,
             address: req.body.address,
             description: req.body.description,
-            date: currentTime,
+            date: req.body.date,
             price:req.body.price,
             manager: req.userId
         });
@@ -34,7 +35,16 @@ exports.eventAll = async (req, res) => {
         res.status(500).json({ message: err })
     }
 }
-
+exports.eventMyAll = async (req, res) => {
+    console.log('------------------getmyall', req.userId)
+    try {
+        const eventAll = await Event.find({manager:req.user._id});
+        res.status(200).json(eventAll)
+    }
+    catch (err) {
+        res.status(500).json({ message: err })
+    }
+}
 exports.eventUpdate = async (req, res) => {
     console.log('------------------update');
 
@@ -70,5 +80,28 @@ exports.eventDelete = async (req, res) => {
         res.status(200).send("Event deleted successfully");
     } catch (err) {
         res.status(500).send({ message: err });
+    }
+}
+
+exports.eventSearch=async (req, res)=>{
+    console.log('------------------search');
+
+    try{
+        const keyword=req.params.keyword;
+        console.log('-------------keyword', keyword)
+        const searchData=await Event.find({
+            $or: [
+                { title: { $regex: keyword, $options: 'i' } },
+                { description: { $regex: keyword, $options: 'i' } },
+                { address: { $regex: keyword, $options: 'i' } },
+                { price: { $regex: keyword, $options: 'i' } }
+              ]
+        })
+        res.status(200).json(
+            searchData
+        )
+    }
+    catch(err){
+        console.log(err)
     }
 }
